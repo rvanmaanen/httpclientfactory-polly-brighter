@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,8 @@ namespace HttpClientFactoryPollyBrighter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var myPolicy = Policy.Handle<HttpRequestException>();
+
             services.AddHttpClient("MyService").AddTransientHttpErrorPolicy(policy => policy.RetryAsync(3));
 
             services.AddMvc();
@@ -35,7 +38,7 @@ namespace HttpClientFactoryPollyBrighter
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+            }   
 
             app.UseMvc();
         }
